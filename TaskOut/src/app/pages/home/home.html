@@ -1,0 +1,95 @@
+<div class="container py-4">
+  <!-- Título -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">
+      <i class="bi bi-hourglass-split text-primary me-2"></i>Registro de Improdutividade
+    </h2>
+    <hr class="w-25 mx-auto" />
+  </div>
+
+  <!-- Botão adicionar -->
+  <div class="text-center mb-4">
+    <button class="btn btn-primary btn-lg px-4 shadow" (click)="openModal()">
+      <i class="bi bi-plus-circle me-2"></i>Adicionar Registro
+    </button>
+  </div>
+
+  <!-- Tabela com filtros -->
+  <div class="table-responsive shadow rounded-3">
+    <table class="table table-bordered table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr class="text-center">
+          <th>
+            Motivo
+            <input type="text" class="form-control form-control-sm mt-1" [(ngModel)]="filtroMotivo" placeholder="Filtrar..." />
+          </th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Duração</th>
+          <th>
+            Usuário
+            <input type="text" class="form-control form-control-sm mt-1" [(ngModel)]="filtroUsuario" placeholder="Filtrar..." />
+          </th>
+          <th>Data</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let registro of registrosFiltrados()" class="text-center">
+          <td>{{ registro.motivo }}</td>
+          <td>{{ registro.inicio | date:'short' }}</td>
+          <td>{{ registro.fim | date:'short' }}</td>
+          <td>
+            <span class="badge bg-info text-dark fs-6">{{ registro.duracao }} h</span>
+          </td>
+          <td>{{ registro.usuario }}</td>
+          <td>{{ registro.data }}</td>
+          <td>
+            <button class="btn btn-outline-danger btn-sm" title="Remover registro" (click)="removerRegistro(registro)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="registrosFiltrados().length === 0">
+          <td colspan="7" class="text-center text-muted py-3">Nenhum registro encontrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <ng-template #modalTemplate let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <i class="bi bi-journal-plus me-2 text-primary"></i>Adicionar Registro
+      </h5>
+      <button type="button" class="btn-close" title="Fechar" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form #form="ngForm" class="row g-3">
+        <div class="col-md-12">
+          <label class="form-label"><i class="bi bi-chat-left-text me-1"></i>Motivo</label>
+          <input type="text" class="form-control" name="motivo" [(ngModel)]="novoRegistro.motivo" required placeholder="Digite o motivo" title="Motivo" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label"><i class="bi bi-clock me-1"></i>Início</label>
+          <input type="datetime-local" class="form-control" name="inicio" [(ngModel)]="novoRegistro.inicio" required placeholder="Selecione o início" title="Início" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label"><i class="bi bi-clock-fill me-1"></i>Fim</label>
+          <input type="datetime-local" class="form-control" name="fim" [(ngModel)]="novoRegistro.fim" required placeholder="Selecione o fim" title="Fim" />
+        </div>
+        <div class="col-md-12">
+          <label class="form-label"><i class="bi bi-person-circle me-1"></i>Usuário</label>
+          <input type="text" class="form-control" name="usuario" [(ngModel)]="novoRegistro.usuario" required placeholder="Digite o nome do usuário" title="Usuário" />
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+      <button class="btn btn-success" [disabled]="!form.valid" (click)="adicionarRegistro(modal)">
+        <i class="bi bi-check-circle me-1"></i>Salvar
+      </button>
+    </div>
+  </ng-template>
+</div>
